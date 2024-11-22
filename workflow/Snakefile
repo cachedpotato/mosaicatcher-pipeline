@@ -21,7 +21,7 @@ if config["ashleys_pipeline"] is True:
         snakefile:
             # "../../ashleys-qc-pipeline-friendsofstrandseq/workflow/Snakefile"
             github(
-                "friendsofstrandseq/ashleys-qc-pipeline",
+                "cachedpotato/ashleys-qc-pipeline",
                 path="workflow/Snakefile",
                 tag=str(config["ashleys_pipeline_version"]),
                 # branch="dev",

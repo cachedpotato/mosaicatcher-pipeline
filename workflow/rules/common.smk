@@ -770,13 +770,14 @@ def get_all_plots(wildcards):
     Function to retrieve all the plots/stats/outputs produced during the pipeline
     """
 
-    df = pd.read_csv(
-        checkpoints.filter_bad_cells_from_mosaic_count.get(
-            sample=wildcards.sample, folder=config["data_location"]
-        ).output.info,
-        skiprows=13,
-        sep="\t",
-    )
+    #This is not working properly - not connected to anything
+    #df = pd.read_csv(
+    #    checkpoints.filter_bad_cells_from_mosaic_count.get(
+    #        sample=wildcards.sample, folder=config["data_location"]
+    #    ).output.info,
+    #    skiprows=13,
+    #    sep="\t",
+    #)
 
     dict_cells_nb_per_sample = {k: len(v) for k, v in cell_per_sample.items()}
     samples = list(dict_cells_nb_per_sample.keys())
