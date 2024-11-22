@@ -1,4 +1,4 @@
-configfile_location = "config/config.yaml"
+configfile_location = "config/testconfig.yaml"
 
 
 configfile: configfile_location
