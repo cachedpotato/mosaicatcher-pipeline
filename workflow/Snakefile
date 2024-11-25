@@ -1,4 +1,4 @@
-configfile_location = "config/testconfig.yaml"
+configfile_location = "config/config.yaml"
 
 
 configfile: configfile_location
@@ -23,8 +23,8 @@ if config["ashleys_pipeline"] is True:
             github(
                 "cachedpotato/ashleys-qc-pipeline",
                 path="workflow/Snakefile",
-                tag=str(config["ashleys_pipeline_version"]),
-                # branch="dev",
+                #tag=str(config["ashleys_pipeline_version"]),
+                # branch="main",
             )
         config:
             config
