@@ -518,9 +518,11 @@ if config["scNOVA"] is True:
                 < df_config_files.loc[df_config_files["Sample"] == sample].shape[0]
             ):
                 print("WARNING: shape error when merging labels TSV & config TSV")
+                #Add Sample column to tmp_merge_df
                 tmp_merge_df = df_config_files.loc[
-                    df_config_files["Sample"] == sample, ["Cell"]
+                    df_config_files["Sample"] == sample, ["Sample", "Cell"]
                 ]
+                #Not sure if it's intentional to set the entire column as True
                 tmp_merge_df["Selected"] = True
             l.append(tmp_merge_df)
     # print(l)
