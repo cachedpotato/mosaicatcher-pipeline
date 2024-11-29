@@ -122,10 +122,20 @@ rule plot_clustering:
                 "filter": "{filter}",
             },
         ),
+        chromosome=report(
+            "{folder}/{sample}/plots/sv_clustering/{method}-filter{filter}-chromosome.pdf",
+            category="SV Clustering",
+            subcategory="{sample}",
+            caption="../report/sv_clustering.rst",
+            labels={
+                "method": "{method}",
+                "filter": "{filter}",
+            },
+        ),
     log:
         "{folder}/log/plot_clustering/{sample}/{method}_filter{filter}.log",
     conda:
-        "../envs/sv_heatmap.yaml"
+        "../envs/BAK/sv_heatmap.yaml"
     resources:
         mem_mb=get_mem_mb,
     script:
