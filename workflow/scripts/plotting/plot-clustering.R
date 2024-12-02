@@ -20,7 +20,8 @@ plot.clustering <- function(inputfile, bin.bed.filename, position.outputfile, ch
     data1_pos <- data1[, 1:3]
     data1_pos_uniq <- unique(data1_pos)
     data1_pos_uniq_sort <- data1_pos_uniq[data1_pos_uniq$chrom == "chr1", ]
-    chrom <- c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9", "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17", "chr18", "chr19", "chr20", "chr21", "chr22", "chrX")
+    #Add ChrY
+    chrom <- c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9", "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17", "chr18", "chr19", "chr20", "chr21", "chr22", "chrX", "chrY")
 
     for (i in 2:length(chrom)) {
         data1_pos_uniq_sort <- rbind(data1_pos_uniq_sort, data1_pos_uniq[data1_pos_uniq$chrom == chrom[i], ])
@@ -143,7 +144,8 @@ plot.clustering <- function(inputfile, bin.bed.filename, position.outputfile, ch
 	data1_pos <- data1[,1:3]
 	data1_pos_uniq <- unique(data1_pos)
 	data1_pos_uniq_sort <- data1_pos_uniq[data1_pos_uniq$chrom=="chr1",]
-	chrom <- c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9", "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17", "chr18", "chr19", "chr20", "chr21", "chr22", "chrX")
+    #Add ChrY
+	chrom <- c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9", "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17", "chr18", "chr19", "chr20", "chr21", "chr22", "chrX", "chrY")
 
 	for (i in 2:length(chrom)){
 		data1_pos_uniq_sort<-rbind(data1_pos_uniq_sort, data1_pos_uniq[data1_pos_uniq$chrom==chrom[i],])
