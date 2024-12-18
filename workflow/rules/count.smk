@@ -133,10 +133,10 @@ if config["ashleys_pipeline"] is False:
                 """
                 # Create the output file
                 echo 'cell\tprobability\tprediction' > {output}
-                # # Process table and append to the output
-                # tail -n+15 {{input.info_raw}} | \
-                # awk '{{print $2".sort.mdup.bam\t"$10"\t"$10}}' >> {output}
-                # cat {output}
+                # Process table and append to the output
+                tail -n+15 {{input.info_raw}} | \
+                awk '{{print $2".sort.mdup.bam\t"$10"\t"$10}}' >> {output}
+                cat {output}
                 """
 
 

@@ -148,6 +148,7 @@ rule download_arbigent_mappability_track:
         """
 
 
+#added priority to ensure the inputs are there when needed
 rule download_scnova_data:
     input:
         ancient(
@@ -181,9 +182,10 @@ rule download_scnova_data:
     log:
         touch("log/config/dl_arbigent_mappability_track.ok"),
     conda:
-        "../envs/scNOVA/scNOVA_DL.yaml"
+        "../envs/scNOVA/scNOVA_DL.yaml",
     # container:
     #     None
+    priority: 50,
     shell:
         """
         directory="workflow/data/ref_genomes/"
