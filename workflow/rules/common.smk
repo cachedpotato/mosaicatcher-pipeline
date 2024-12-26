@@ -519,7 +519,7 @@ if config["scNOVA"] is True:
             if ((
                 tmp_merge_df.shape[0]
                 < df_config_files.loc[df_config_files["Sample"] == sample].shape[0]
-            ) and (config["scNOVA_manual_cell_selection] == True)):
+            ) and (config["scNOVA_manual_cell_selection"] == True)):
                 print("WARNING: shape error when merging labels TSV & config TSV")
                 print("Using manually selected cells")
                 #Add Sample column to tmp_merge_df
