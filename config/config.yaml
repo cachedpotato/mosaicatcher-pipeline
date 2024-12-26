@@ -238,6 +238,9 @@ scNOVA_scripts:
   count_sort_annotate_chrid_CREs: "workflow/scripts/scNOVA_scripts/count_sort_annotate_chrid_CREs.R"
   infer_diff_gene_expression_alt: "workflow/scripts/scNOVA_scripts/infer_diff_gene_expression_alt.R"
 
+#Decides whether to use custom cell selection or selection by the pipeline
+scNOVA_manual_cell_selection: False
+
 # --------------------------------------------------------
 # Plotting options
 # --------------------------------------------------------
