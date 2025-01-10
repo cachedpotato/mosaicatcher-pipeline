@@ -6,3 +6,4 @@ dependencies:
   - bedtools
   - biobambam
   - samtools
+  - staden_io_lib=1.14
