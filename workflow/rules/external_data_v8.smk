@@ -180,7 +180,7 @@ rule download_scnova_data:
         "workflow/data/scNOVA/utils/Strand_seq_matrix_TES_for_SVM.txt",
         "workflow/data/scNOVA/utils/Strand_seq_matrix_TSS_for_SVM.txt",
     log:
-        touch("log/config/dl_arbigent_mappability_track.ok"),
+        touch("log/config/download_scnova_data.ok"),
     conda:
         "../envs/scNOVA/scNOVA_DL.yaml",
     # container:
