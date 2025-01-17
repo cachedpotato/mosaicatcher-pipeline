@@ -121,8 +121,8 @@ if config["ashleys_pipeline"] is False:
     else:
 
         rule touch_labels:
-            # input:
-            #     info_raw="{folder}/{sample}/counts/{sample}.info_raw",
+            input:
+                info_raw="{folder}/{sample}/counts/{sample}.info_raw",
             output:
                 "{folder}/{sample}/cell_selection/labels.tsv",
             log:
@@ -134,7 +134,7 @@ if config["ashleys_pipeline"] is False:
                 # Create the output file
                 echo 'cell\tprobability\tprediction' > {output}
                 # Process table and append to the output
-                tail -n+15 {{input.info_raw}} | \
+                tail -n+15 {input.info_raw} | \
                 awk '{{print $2".sort.mdup.bam\t"$10"\t"$10}}' >> {output}
                 cat {output}
                 """
