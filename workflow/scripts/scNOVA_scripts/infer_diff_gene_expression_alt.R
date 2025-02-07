@@ -21,6 +21,7 @@ library(foreach)
 
 
 filename = args[9]
+ROOT = "/pipeline"
 
 pdf(filename, width = 11, height = 10)
 
@@ -197,7 +198,7 @@ Y <- as.matrix(Y)
 ## 4) Autoscaling X and Y matrix
 ## ----------------------------------------
 
-source("workflow/scripts/scNOVA_scripts/script_PLSDA/auto_R.R")
+source("/pipeline/workflow/scripts/scNOVA_scripts/script_PLSDA/auto_R.R")
 X_auto <- auto_R(X_GB_RPM_log)
 Y_auto <- auto_R(Y)
 
@@ -218,7 +219,7 @@ if (length(conds) <= 20) {
     lv <- (length(conds) - 1)
 }
 
-source("workflow/scripts/scNOVA_scripts/script_PLSDA/pls_R_scNOVA.R")
+source("/pipeline/workflow/scripts/scNOVA_scripts/script_PLSDA/pls_R_scNOVA.R")
 result_pls_all <- pls_R(X_auto, Y_auto, lv)
 # Plot LV1 and LV2
 # data_lab_mat_sub <- as.matrix(conds)
@@ -266,7 +267,7 @@ Y_auto_train <- matrix(0, nrow(Y_auto) - 1, ncol(Y_auto))
 X_auto_test <- matrix(0, 1, ncol(X_auto))
 Y_auto_test <- matrix(0, 1, ncol(Y_auto))
 
-source("workflow/scripts/scNOVA_scripts/script_PLSDA/Pred_PLS_R_scNOVA.R")
+source("/pipeline/workflow/scripts/scNOVA_scripts/script_PLSDA/Pred_PLS_R_scNOVA.R")
 
 
 # Set progress bar options
@@ -312,19 +313,26 @@ plot(colMeans(evaluation), type = "l", xlab = "num of LV", ylab = "Accuracy", yl
 
 
 print("M")
-
+write.table(evaluation, "eval.tsv", sep="\t")
+print("EVAL")
+head(evaluation)
 
 
 # Feature selection using VIP
 lv_for_vip <- which.max(colMeans(evaluation))
+
+print("M1")
 w <- result_pls_all$pls_w[, 1:lv_for_vip]
 r2 <- result_pls_all$pls_ssq[1:lv_for_vip, 4]
-source("workflow/scripts/scNOVA_scripts/script_PLSDA/vip_R_v2_scNOVA.R")
-result_vip_all <- vip_R_v2(w, r2)
+write.table(w, "w.tsv", sep="\t")
+write.table(r2, "r2.tsv", sep="\t")
 
+source("/pipeline/workflow/scripts/scNOVA_scripts/script_PLSDA/vip_R_v2_scNOVA.R")
+result_vip_all <- vip_R_v2(w, r2)
+print("M2")
 
 # Generation of null distribution of VIP
-source("workflow/scripts/scNOVA_scripts/script_PLSDA/vip_null_R.R")
+source("/pipeline/workflow/scripts/scNOVA_scripts/script_PLSDA/vip_null_R.R")
 perm <- 100
 result_vip_all_null <- vip_null_R(X_auto, Y_auto, perm, lv_for_vip)
 hist(result_vip_all_null, 200, xlab = "VIP", ylab = "Frequency", main = "empirical distribution of VIP")
@@ -472,8 +480,5 @@ if (sum(res_sort_woMT$Hit == 1) > 1) {
     colnames(row_annotation_sort) <- "Var1"
     pheatmap(normlogt_sort[, res_sort_woMT$Hit == 1], show_rownames = F, show_colnames = T, cluster_cols = T, cluster_rows = F, scale = "column", col = mycol, breaks = breaksList, clustering_distance_rows = "euclidean", cex = 0.8, annotation_row = row_annotation, annotation_colors = anno_colors, clustering_method = "ward.D")
 }
-
-
-
 
 dev.off()
