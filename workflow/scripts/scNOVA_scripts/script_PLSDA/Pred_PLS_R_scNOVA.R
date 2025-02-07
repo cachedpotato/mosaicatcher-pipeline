@@ -1,5 +1,5 @@
 Pred_PLS_R <- function(xtrain1, ytrain, xtest1, lv) {
-    source("workflow/scripts/scNOVA_scripts/script_PLSDA/pls_R_scNOVA.R")
+    source("/pipeline/workflow/scripts/scNOVA_scripts/script_PLSDA/pls_R_scNOVA.R")
     result_pls <- pls_R(xtrain1, ytrain, lv)
     B <- matrix(0, lv, lv)
     that1 <- matrix(0, 1, lv)
@@ -11,5 +11,6 @@ Pred_PLS_R <- function(xtrain1, ytrain, xtest1, lv) {
     for (j in 1:lv) {
         ypred <- that1[, 1:j] %*% B[1:j, 1:j] %*% t(result_pls$pls_q[, 1:j])
     }
+    #write.table(ypred, paste0("/pipeline/out/ypred_",lv,".tsv"), sep="\t")
     return(ypred)
 }

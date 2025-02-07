@@ -28,7 +28,7 @@ pls_R <- function(x, y, lv) {
 
   for (i in 1:lv) {
     # cat(paste0(i, ' '))
-    source("workflow/scripts/scNOVA_scripts/script_PLSDA/plsnipal_R.R")
+    source("/pipeline/workflow/scripts/scNOVA_scripts/script_PLSDA/plsnipal_R.R")
     result <- plsnipal_R(x, y)
     pp <- result$result_p
     qq <- result$result_q
@@ -66,8 +66,9 @@ pls_R <- function(x, y, lv) {
   colnames(ssq) <- c("LV", "X_This_LV", "X_Total", "Y_This_LV", "Y_Total")
 
 
+
   m <- matrix(0, olv * ny, nx)
-  source("workflow/scripts/scNOVA_scripts/script_PLSDA/conpred_R.R")
+  source("/pipeline/workflow/scripts/scNOVA_scripts/script_PLSDA/conpred_R.R")
   m[1:(lv * ny), ] <- conpred_R(b, w, p, q, lv)
 
 
@@ -82,6 +83,15 @@ pls_R <- function(x, y, lv) {
       m[, k] <- cumsum(m[, k])
     }
   }
+
+  #write.table(ssq, "/pipeline/debug/ssq.tsv", sep="\t") #REMOVE LATER
+  #write.table(m, "/pipeline/out/m.tsv", sep="\t") #REMOVE LATER
+  #write.table(p, "/pipeline/out/p.tsv", sep="\t") #REMOVE LATER
+  #write.table(q, "/pipeline/out/q.tsv", sep="\t") #REMOVE LATER
+  #write.table(w, "/pipeline/out/w.tsv", sep="\t") #REMOVE LATER
+  #write.table(t, "/pipeline/out/t.tsv", sep="\t") #REMOVE LATER
+  #write.table(u, "/pipeline/out/u.tsv", sep="\t") #REMOVE LATER
+  #write.table(b, "/pipeline/out/b.tsv", sep="\t") #REMOVE LATER
 
 
   return(list(pls_m = m, pls_ssq = ssq, pls_p = p, pls_q = q, pls_w = w, pls_t = t, pls_u = u, pls_b = b))

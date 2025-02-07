@@ -260,6 +260,8 @@ registerDoParallel(cl)
 
 # Pre-allocate evaluation matrix
 evaluation <- matrix(0, nrow(X_auto), lv)
+#print(nrow(X_auto))
+#print(ncol(X_auto))
 
 # Pre-allocate train and test sets
 X_auto_train <- matrix(0, nrow(X_auto) - 1, ncol(X_auto))
@@ -275,15 +277,21 @@ opts <- list(progress = "text", verbose = FALSE)
 
 for (aj in 2:lv) {
     print(aj)
-    # Prepare train and test sets
-    X_auto_train <- X_auto[-1, ]
-    Y_auto_train <- Y_auto[-1, ]
-    X_auto_test <- X_auto[1, ]
-    Y_auto_test <- Y_auto[1, ]
+    ## Prepare train and test sets
+    #X_auto_train <- X_auto[-1, ]
+    #Y_auto_train <- Y_auto[-1, ]
+    #X_auto_test <- X_auto[1, ]
+    #Y_auto_test <- Y_auto[1, ]
 
     # Define foreach loop
     results <- foreach(ai = 1:nrow(X_auto), .combine = rbind, .options.snow = opts) %dopar% {
-        result_ypred <- Pred_PLS_R(X_auto_train[-ai, ], Y_auto_train[-ai, ], X_auto_test, aj)
+        source("/pipeline/workflow/scripts/scNOVA_scripts/script_PLSDA/Pred_PLS_R_scNOVA.R")
+        X_auto_train <- data.matrix(X_auto[-ai, ])
+        Y_auto_train <- data.matrix(Y_auto[-ai, ])
+        X_auto_test <- data.matrix(X_auto[ai, ])
+        Y_auto_test <- data.matrix(Y_auto[ai, ])
+        #result_ypred <- Pred_PLS_R(X_auto_train[-ai, ], Y_auto_train[-ai, ], X_auto_test, aj)
+        result_ypred <- Pred_PLS_R(X_auto_train, Y_auto_train, X_auto_test, aj)
         sum(which.max(Y_auto_test) == which.max(result_ypred))
     }
 
@@ -295,40 +303,40 @@ for (aj in 2:lv) {
 stopCluster(cl)
 
 
-# # Leave-One-Out cross validation using all features
-# evaluation <- matrix(0, nrow(X_auto), lv)
-# for (aj in 2:lv) {
-#     for (ai in 1:nrow(X_auto)) {
-#         X_auto_train <- X_auto[-ai, ]
-#         Y_auto_train <- Y_auto[-ai, ]
-#         X_auto_test <- X_auto[ai, ]
-#         Y_auto_test <- Y_auto[ai, ]
-#         source("workflow/scripts/scNOVA_scripts/script_PLSDA/Pred_PLS_R_scNOVA.R")
-#         result_ypred <- Pred_PLS_R(X_auto_train, Y_auto_train, X_auto_test, aj)
-#         evaluation[ai, aj] <- sum(which.max(Y_auto_test) == which.max(result_ypred))
-#     }
-#     cat(paste0(aj, " "))
-# }
+## Leave-One-Out cross validation using all features
+#evaluation <- matrix(0, nrow(X_auto), lv)
+#for (aj in 2:lv) {
+#    for (ai in 1:nrow(X_auto)) {
+#        X_auto_train <- X_auto[-ai, ]
+#        Y_auto_train <- Y_auto[-ai, ]
+#        X_auto_test <- X_auto[ai, ]
+#        Y_auto_test <- Y_auto[ai, ]
+#        source("/pipeline/workflow/scripts/scNOVA_scripts/script_PLSDA/Pred_PLS_R_scNOVA.R")
+#        result_ypred <- Pred_PLS_R(X_auto_train, Y_auto_train, X_auto_test, aj)
+#        evaluation[ai, aj] <- sum(which.max(Y_auto_test) == which.max(result_ypred))
+#    }
+#    cat(paste0(aj, " "))
+#}
 plot(colMeans(evaluation), type = "l", xlab = "num of LV", ylab = "Accuracy", ylim = c(0, 1))
 
-
 print("M")
-write.table(evaluation, "eval.tsv", sep="\t")
-print("EVAL")
-head(evaluation)
-
+#write.table(evaluation, "eval.tsv", sep="\t")
 
 # Feature selection using VIP
 lv_for_vip <- which.max(colMeans(evaluation))
+print(lv_for_vip)
 
 print("M1")
-w <- result_pls_all$pls_w[, 1:lv_for_vip]
-r2 <- result_pls_all$pls_ssq[1:lv_for_vip, 4]
-write.table(w, "w.tsv", sep="\t")
-write.table(r2, "r2.tsv", sep="\t")
+w <- data.matrix(result_pls_all$pls_w)[, 1:lv_for_vip]
+r2 <- data.matrix(result_pls_all$pls_ssq)[1:lv_for_vip, 4]
+#print(paste0("INITIAL W  NCOL: ", ncol(w)))
+#print(paste0("INITIAL W  NROW: ", nrow(w)))
+#print(paste0("INITIAL R2 NCOL: ", ncol(r2)))
+#print(paste0("INITIAL R2 NROW: ", nrow(r2)))
 
 source("/pipeline/workflow/scripts/scNOVA_scripts/script_PLSDA/vip_R_v2_scNOVA.R")
 result_vip_all <- vip_R_v2(w, r2)
+#write.table(result_vip_all, "result_vip_all.txt")
 print("M2")
 
 # Generation of null distribution of VIP
