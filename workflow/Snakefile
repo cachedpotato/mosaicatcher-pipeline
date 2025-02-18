@@ -141,6 +141,24 @@ if config["list_commands"] is False:
         rule all:
             input:
                 get_final_output(),
+            output:
+                /pipeline/out/all.ok
+            shell:
+            """
+            touch {output}
+            """
+
+
+        #Change ownership of all output files from root to host user
+        rule change_ownership:
+            input:
+                /pipeline/out/all.ok
+            output:
+                /pipeline/out/changeownership.ok
+            shell:
+            """
+            touch {output} && chown -R /pipeline/data ${{USER_ID}}:${{USER_ID}} && chown -R /pipeline/out ${{USER_ID}}:${{USER_ID}}
+            """
 
     if config["email"]:
 
