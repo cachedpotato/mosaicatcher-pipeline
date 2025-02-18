@@ -26,6 +26,9 @@ data_location: ".tests/data_CHR17"
 # Directory to publish important data (e.g., stats, plots, counts). Leave empty if not required.
 publishdir: ""
 
+#user id for changing ownership of output files
+user: 0
+
 # --------------------------------------------------------
 # Ashleys-QC upstream pipeline
 # --------------------------------------------------------

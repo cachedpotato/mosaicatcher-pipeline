@@ -137,6 +137,22 @@ if config["list_commands"] is False:
                 default_target: True
 
     else:
+        #Change ownership of all output files from root to host user
+        rule complete:
+            input:
+                /pipeline/out/changeownership.ok
+
+        rule change_ownership:
+            input:
+                /pipeline/out/all.ok
+            output:
+                /pipeline/out/changeownership.ok
+            params:
+                user: config["user"]
+            shell:
+            """
+            touch {output} && chown -R {params.user} /pipeline/data && chown -R {params.user} /pipeline/out
+            """
 
         rule all:
             input:
@@ -149,16 +165,6 @@ if config["list_commands"] is False:
             """
 
 
-        #Change ownership of all output files from root to host user
-        rule change_ownership:
-            input:
-                /pipeline/out/all.ok
-            output:
-                /pipeline/out/changeownership.ok
-            shell:
-            """
-            touch {output} && chown -R /pipeline/data ${{USER_ID}}:${{USER_ID}} && chown -R /pipeline/out ${{USER_ID}}:${{USER_ID}}
-            """
 
     if config["email"]:
 
