@@ -19,4 +19,5 @@ dependencies:
   - bioconductor-jaspar2016=1.18.0
   - r-codetools=0.2_18
   - r-fitdistrplus
+  - r-doparallel
 prefix: ./
