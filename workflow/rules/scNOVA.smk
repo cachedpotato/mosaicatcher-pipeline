@@ -729,6 +729,7 @@ rule infer_expressed_genes_split:
     # container:
     #     None
     input:
+        script="workflow/scripts/scNOVA_scripts/Deeplearning_Nucleosome_predict_train_RPE.py",
         features="{folder}/{sample}/scNOVA_result/Features_reshape_all_orientation_norm_var_GC_CpG_RT_T_comb3_{clone}.txt",
         TSS_annot="{folder}/{sample}/scNOVA_result/Features_reshape_all_TSS_matrix_woM_all_RT_{clone}.txt",
     output:
@@ -737,8 +738,12 @@ rule infer_expressed_genes_split:
         "../envs/scNOVA/scNOVA_DL.yaml"
     resources:
         mem_mb=get_mem_mb,
-    script:
-        "../scripts/scNOVA_scripts/Deeplearning_Nucleosome_predict_train_RPE.py"
+    shell:
+        """
+	python {input.script} {input.features} {input.TSS_annot} {output.train} {wildcards.clone} {wildcards.chrom} {wildcards.i} 2>&1 | tee /pipeline/infer_expressed_gene_split_log.out
+	"""
+   # script:
+   #     "../scripts/scNOVA_scripts/Deeplearning_Nucleosome_predict_train_RPE.py"
 
 
 rule gather_infer_expressed_genes_split:
