@@ -489,46 +489,56 @@ if config["scNOVA"] is True:
         ), "Ashleys labels were not computed yet, use first ashleys mode to perform cell selection"
 
         # print(labels_path)
-        if os.path.exists(labels_path):
-            # Read df
-            tmp_df_labels_selected = pd.read_csv(labels_path, sep="\t")[
-                ["cell", "prediction"]
+        # Read df
+        tmp_df_labels_selected = pd.read_csv(labels_path, sep="\t")[
+            ["cell", "prediction"]
+        ]
+        # Reformat to match #df_config_files
+        tmp_df_labels_selected = tmp_df_labels_selected.rename(
+            {"cell": "Cell", "prediction": "Selected"}, axis=1
+        )
+        tmp_df_labels_selected["Cell"] = tmp_df_labels_selected["Cell"].str.replace(
+            ".sort.mdup.bam", "", regex=False
+        )
+        tmp_df_labels_selected["Selected"] = tmp_df_labels_selected[
+            "Selected"
+        ].astype(bool)
+        # print(tmp_df_labels_selected)
+        # print(df_config_files)
+        # Merge dfs
+        tmp_merge_df = pd.merge(
+            tmp_df_labels_selected,
+            df_config_files.drop(["Selected"], axis=1),
+            on=["Cell"],
+        )
+        #
+        # get input_subclonality.txt and filter cells that are not in this file
+        #
+        subclonality_file = pd.read_csv(
+            "{}/{}/scNOVA_input_user/input_subclonality.txt".format(
+                config["data_location"], sample
+            ),
+            sep="\t",
+        )
+        tmp_merge_df = tmp_merge_df.loc[tmp_merge_df["Cell"].isin(subclonality_file["Filename"])]
+
+        # Handle use-case if df don't have the same shapes
+        # Added new variable to config - scNOVA_manual_cell_selection
+        # if True: use the original config_df.tsv
+        # if False: use the merged TSV created above
+        if ((
+            tmp_merge_df.shape[0]
+            < df_config_files.loc[df_config_files["Sample"] == sample].shape[0]
+        ) and (config["scNOVA_manual_cell_selection"] == True)):
+            print("WARNING: shape error when merging labels TSV & config TSV")
+            print("Using manually selected cells")
+            #Add Sample column to tmp_merge_df
+            tmp_merge_df = df_config_files.loc[
+                df_config_files["Sample"] == sample, ["Sample", "Cell"]
             ]
-            # Reformat to match #df_config_files
-            tmp_df_labels_selected = tmp_df_labels_selected.rename(
-                {"cell": "Cell", "prediction": "Selected"}, axis=1
-            )
-            tmp_df_labels_selected["Cell"] = tmp_df_labels_selected["Cell"].str.replace(
-                ".sort.mdup.bam", "", regex=False
-            )
-            tmp_df_labels_selected["Selected"] = tmp_df_labels_selected[
-                "Selected"
-            ].astype(bool)
-            # print(tmp_df_labels_selected)
-            # print(df_config_files)
-            # Merge dfs
-            tmp_merge_df = pd.merge(
-                tmp_df_labels_selected,
-                df_config_files.drop(["Selected"], axis=1),
-                on=["Cell"],
-            )
-            # Handle use-case if df don't have the same shapes
-            # Added new variable to config - scNOVA_manual_cell_selection
-            # if True: use the original config_df.tsv
-            # if False: use the merged TSV created above
-            if ((
-                tmp_merge_df.shape[0]
-                < df_config_files.loc[df_config_files["Sample"] == sample].shape[0]
-            ) and (config["scNOVA_manual_cell_selection"] == True)):
-                print("WARNING: shape error when merging labels TSV & config TSV")
-                print("Using manually selected cells")
-                #Add Sample column to tmp_merge_df
-                tmp_merge_df = df_config_files.loc[
-                    df_config_files["Sample"] == sample, ["Sample", "Cell"]
-                ]
-                #Not sure if it's intentional to set the entire column as True
-                tmp_merge_df["Selected"] = True
-            l.append(tmp_merge_df)
+        #Set the selected column as True
+        tmp_merge_df["Selected"] = True
+        l.append(tmp_merge_df)
     # print(l)
     # Concat df to create a new one
     df_config_files_with_labels = pd.concat(l).reset_index(drop=True)
@@ -766,7 +776,7 @@ def get_final_output_scnova():
             folder=config["data_location"],
             sample=samples,
         )
-    )
+    
 
     return final_list
 
