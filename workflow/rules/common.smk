@@ -776,7 +776,7 @@ def get_final_output_scnova():
             folder=config["data_location"],
             sample=samples,
         )
-    
+    )
 
     return final_list
 
