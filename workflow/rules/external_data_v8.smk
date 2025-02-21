@@ -154,7 +154,7 @@ rule download_scnova_data:
         ancient(
             # HTTP.remote(
             storage.http(
-                "https://zenodo.org/record/7697400/files/scNOVA_data_models.zip",
+                "https://zenodo.org/records/7697400/files/scNOVA_data_models.zip",
                 keep_local=True,
             )
         ),
