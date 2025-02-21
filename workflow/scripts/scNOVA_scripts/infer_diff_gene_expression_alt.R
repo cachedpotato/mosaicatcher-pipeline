@@ -59,10 +59,21 @@ print("B")
 
 ## Sort the order of single-cells
 GB_count_name <- as.data.frame(as.matrix(colnames(GB_count)))
+
+#filter out only those with input subclonality (in input_subclonality.txt)
+for (j in 1:nrow(GB_count_name)) {
+    GB_count_name[j, 1] <- strsplit(as.character(GB_count_name[j, 1]), ".bam")[[1]][1]
+}
+
+GB_count_name <- as.data.frame(GB_count_name[match(class_label_strict_subclone$Filename, GB_count_name[,1]), ])
 GB_count_name$index <- 0
+colnames(GB_count_name) <- c("name", "index")
+print("FILTER")
+
+
 for (j in 1:nrow(GB_count_name)) {
     # GB_count_name[j, 1] <- strsplit(GB_count_name[j, 1], ".sort.mdup.sc_pre_mono_sort_for_mark_uniq.bam")[[1]][1]
-    GB_count_name[j, 1] <- strsplit(GB_count_name[j, 1], ".bam")[[1]][1]
+    #GB_count_name[j, 1] <- strsplit(GB_count_name[j, 1], ".bam")[[1]][1]
     GB_count_name[j, 2] <- which(class_label_strict_subclone[, 1] == GB_count_name[j, 1])
 }
 GB_count <- GB_count[, order(GB_count_name[, 2])]

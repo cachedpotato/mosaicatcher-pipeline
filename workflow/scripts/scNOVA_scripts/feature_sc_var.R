@@ -36,11 +36,24 @@ Deeptool_result_name <- as.data.frame(as.matrix(colnames(Deeptool_result_final_n
 # print("B")
 
 
+
+#filter out only those with input subclonality (in input_subclonality.txt)
+for (j in 1:nrow(Deeptool_result_name)) {
+    Deeptool_result_name[j, 1] <- strsplit(as.character(Deeptool_result_name[j, 1]), ".bam")[[1]][1]
+}
+
+Deeptool_result_name <- as.data.frame(Deeptool_result_name[match(subclone_list$Filename, Deeptool_result_name[,1]), ])
+head(Deeptool_result_name)
+print(dim(Deeptool_result_name))
 Deeptool_result_name$index <- 0
+colnames(Deeptool_result_name) <- c("name", "index")
+
+print("FILTER")
+
 for (j in 1:nrow(Deeptool_result_name)) {
     print(j)
     # print("C")
-    Deeptool_result_name[j, 1] <- strsplit(as.character(Deeptool_result_name[j, 1]), ".bam")[[1]][1]
+    #Deeptool_result_name[j, 1] <- strsplit(as.character(Deeptool_result_name[j, 1]), ".bam")[[1]][1]
     # Deeptool_result_name[j, 1] <- strsplit(Deeptool_result_name[j, 1], ".sort.mdup.sc_pre_mono_sort_for_mark_uniq.bam")[[1]][1]
     # print("D")
     Deeptool_result_name[j, 2] <- which(as.character(subclone_list[, 1]) == Deeptool_result_name[j, 1])
