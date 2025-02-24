@@ -9,7 +9,7 @@ vip_R_v2 <- function(w, r2) {
   #print(normc(w)^2)
   #print(diag(r2))
   test <- (normc(w)^2) %*% diag(r2)
-  write.table(test, "/pipeline/debug/vipTest.txt", sep="\t")
+  #write.table(test, "/pipeline/debug/vipTest.txt", sep="\t")
   #print("WRITE IN VIP")
   vip <- sqrt(rowSums((normc(w)^2) %*% diag(r2)) / sum(r2) * nrow(w))
   #print("VIPOUT")
