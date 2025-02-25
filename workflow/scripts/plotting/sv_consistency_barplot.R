@@ -6,6 +6,7 @@ SVplotting <- function(inputfile, outputfile.byPOS, outputfile.byVAF) {
   library(ggplot2)
   library(data.table)
   library(GenomicRanges)
+  library(reshape2)
   
   
   # ***********************************************
@@ -69,7 +70,7 @@ SVplotting <- function(inputfile, outputfile.byPOS, outputfile.byVAF) {
   svType <- sapply(1:length(regions), function(x) table(regions[[x]]$sv_call_name)) 
   
   # prepare df for plotting
-  df <- melt(svType) # var2=region
+  df <- reshape2::melt(svType) # var2=region
   #df$regions <- unlist(names(regions))[df$Var2] # add region information
   sorted.regions <- sort(unlist(reduce(regions)))[df$Var2]
   df$regions <- names(sorted.regions)
