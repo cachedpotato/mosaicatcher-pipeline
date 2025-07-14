@@ -19,13 +19,13 @@ if config["ashleys_pipeline"] is True:
 
     module ashleys_qc:
         snakefile:
-            # "../../ashleys-qc-pipeline-friendsofstrandseq/workflow/Snakefile"
-            github(
-                "cachedpotato/ashleys-qc-pipeline",
-                path="workflow/Snakefile",
-                #tag=str(config["ashleys_pipeline_version"]),
-                branch="main",
-            )
+            "/ashleys-qc-pipeline/workflow/Snakefile"
+            #github(
+            #    "cachedpotato/ashleys-qc-pipeline",
+            #    path="workflow/Snakefile",
+            #    #tag=str(config["ashleys_pipeline_version"]),
+            #    branch="main",
+            #)
         config:
             config
 
@@ -123,18 +123,58 @@ if config["list_commands"] is False:
     if config["ashleys_pipeline"] is True:
         if config["ashleys_pipeline_only"] is False:
 
+            rule complete:
+                input: "/pipeline/out/nao_change_ownership.ok",
+
+            rule change_ownership:
+                input: 
+                    "/pipeline/out/nao_all.ok",
+                output: 
+                    "/pipeline/out/nao_change_ownership.ok",
+                params: 
+                    user=config["user"],
+                shell:
+                    """
+                    touch {output} && chown -R {params.user}:{params.user} /pipeline/out && chown -R {params.user}:{params.user} /pipeline/data
+                    """
             rule all:
                 input:
                     rules.ashleys_all.input,
                     get_final_output(),
                 default_target: True
+                output:
+                    "/pipeline/out/nao_all.ok",
+                shell:
+                    """
+                    touch {output}
+                    """
 
         else:
 
+            rule complete:
+                input: "/pipeline/out/ao_change_ownership.ok",
+
+            rule change_ownership:
+                input: 
+                    "/pipeline/out/ao_all.ok",
+                output: 
+                    "/pipeline/out/ao_change_ownership.ok",
+                params: 
+                    user=config["user"],
+                shell:
+                    """
+                    touch {output} && chown -R {params.user}:{params.user} /pipeline/out && chown -R {params.user}:{params.user} /pipeline/data
+                    """
             rule all:
                 input:
                     rules.ashleys_all.input,
-                default_target: True
+                default_target: True,
+                output:
+                    "/pipeline/out/ao_all.ok",
+                shell:
+                    """
+                    touch {output}
+                    """
 
     else:
 
