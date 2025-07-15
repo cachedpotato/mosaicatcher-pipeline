@@ -24,7 +24,7 @@ rule download_hg19_reference:
     input:
         # HTTP.remote(
         storage.http(
-            "https://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/analysisSet/hg19.p13.plusMT.no_alt_analysis_set.fa.gz",
+            "https://hgdownload.soe.ucsc.edu/goldenpath/hg19/bigZips/analysisSet/hg19.p13.plusMT.no_alt_analysis_set.fa.gz",
             keep_local=True,
         ),
     output:
@@ -46,7 +46,7 @@ rule download_hg38_reference:
     input:
         # HTTP.remote(
         storage.http(
-            "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/analysisSet/hg38.analysisSet.fa.gz",
+            "https://hgdownload.soe.ucsc.edu/goldenpath/hg38/bigZips/analysisSet/hg38.analysisSet.fa.gz",
             keep_local=True,
         ),
     output:
