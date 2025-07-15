@@ -125,6 +125,7 @@ if config["list_commands"] is False:
 
             rule complete:
                 input: "/pipeline/out/nao_change_ownership.ok",
+                default_target: True
 
             rule change_ownership:
                 input: 
@@ -141,7 +142,6 @@ if config["list_commands"] is False:
                 input:
                     rules.ashleys_all.input,
                     get_final_output(),
-                default_target: True
                 output:
                     "/pipeline/out/nao_all.ok",
                 shell:
@@ -153,6 +153,7 @@ if config["list_commands"] is False:
 
             rule complete:
                 input: "/pipeline/out/ao_change_ownership.ok",
+                default_target: True,
 
             rule change_ownership:
                 input: 
@@ -168,7 +169,6 @@ if config["list_commands"] is False:
             rule all:
                 input:
                     rules.ashleys_all.input,
-                default_target: True,
                 output:
                     "/pipeline/out/ao_all.ok",
                 shell:
